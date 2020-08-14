@@ -4,12 +4,12 @@ import json
 from scrapy.http import Request
 
 
-class PctidningenSpider(scrapy.Spider):
-    name = 'pctidningen'
-    allowed_domains = ['test.pctidningen.se']
-    start_urls = ['https://test.pctidningen.se/cms/wp-admin/admin-ajax.php'
-                  '?action=product-search&price_from=0&price_to=0&orderby=' \
-                  'review_date&order=desc&page=%d' % n for n in range(0, 92)]
+class KotimikroSpider(scrapy.Spider):
+    name = 'kotimikro'
+    allowed_domains = ['testit.kotimikro.fi']
+    start_urls = ['https://testit.kotimikro.fi/cms/wp-admin/'
+                  'admin-ajax.php?action=product-search&price_from'
+                  '=0&price_to=0&orderby=review_date&order=desc&page=%d' % n for n in range(1, 86)]
 
     def parse(self, response):
         review_data = json.loads(response.text)
@@ -63,5 +63,5 @@ class PctidningenSpider(scrapy.Spider):
                'Pros': pros,
                'Cons': cons,
                'Verdict': verdict,
-               'Url': url
+               'URL': url
                }
