@@ -32,22 +32,39 @@ class HdtvsandmoreComSpider(scrapy.Spider):
         title_xpath = '//h2[@class="post-title"]/text()'
         title = response.xpath(title_xpath).get()
 
-        productname_xpath = '//ul[@class="review-list"]/li/span/text()'
-        productname = response.xpath(productname_xpath).get()
+        # productname_xpath = '//ul[@class="review-list"]/li/span/text()'
+        # productname = response.xpath(productname_xpath).get()
 
-        pros_xpath = '//div[@class="review-pros wpr-col-1-2 pr-10"]/ul/li/text()'
-        pros = response.xpath(pros_xpath).getall()
+        product_name = ''
+        revs = ['REVIEW', 'Review', 'review']
+        for item in revs:
+            if item in title:
+                product_name = title.replace(item, '').strip()
+            # else:
+                # product_name = title
 
-        cons_xpath = '//div[@class="review-cons wpr-col-1-2 pl-10"]/ul/li/text()'
-        cons = response.xpath(cons_xpath).getall()
+        pros_xpath = '//div[@class="review-pros wpr-col-1-2 pr-10"]/ul/li/text() | ' \
+                     '//*[contains(text(),"Pros:")]/following::text()[1] | ' \
+                     '//strong[contains(text(),"Pros")]/following::ul/li//text()'
+        pros = response.xpath(pros_xpath).get()
+
+        cons_xpath = '//div[@class="review-cons wpr-col-1-2 pl-10"]/ul/li/text() | ' \
+                     '//*[contains(text(),"Cons:")]/following::text()[1] | ' \
+                     '//strong[contains(text(),"Cons")]/following::ul/li//text()'
+        cons = response.xpath(cons_xpath).get()
 
         summary_xpath = '//meta[@name="description"]/@content'
         summary = response.xpath(summary_xpath).get()
 
-        yield {'Product Name': productname,
+        verdict_xpath = '//div[@class="entry clearfix"]/p[last() -1]/text() | ' \
+                        '//span[contains(text(),"Conclusion")]/following::p[1]//text()'
+        verdict = response.xpath(verdict_xpath).get()
+
+        yield {'Product Name': product_name,
                'Title': title,
                'Author': author,
                'Date': date,
                'Pros': pros,
                'Cons': cons,
-               'Summary': summary}
+               'Summary': summary,
+               'Verdict': verdict}
