@@ -9,7 +9,7 @@ class PctidningenSpider(scrapy.Spider):
     allowed_domains = ['test.pctidningen.se']
     start_urls = ['https://test.pctidningen.se/cms/wp-admin/admin-ajax.php'
                   '?action=product-search&price_from=0&price_to=0&orderby=' \
-                  'review_date&order=desc&page=%d' % n for n in range(0, 92)]
+                  'review_date&order=desc&page=%d' % n for n in range(1, 92)]
 
     def parse(self, response):
         review_data = json.loads(response.text)
